@@ -23,7 +23,7 @@
                 <legend><?= __('Edit Note') ?></legend>
                 <?php
                     echo $this->Form->control('name');
-                    echo $this->Form->control('address');
+                    // echo $this->Form->control('address');
                     echo $this->Form->control('memo');
                 ?>
             </fieldset>

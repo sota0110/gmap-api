@@ -13,6 +13,7 @@
                 <tr>
                     <th><?= $this->Paginator->sort('id') ?></th>
                     <th><?= $this->Paginator->sort('name') ?></th>
+                    <th><?= $this->Paginator->sort('lat lng') ?></th>
                     <th class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
@@ -21,6 +22,7 @@
                 <tr>
                     <td><?= $this->Number->format($note->id) ?></td>
                     <td><?= h($note->name) ?></td>
+                    <td><?= h($note->address) ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $note->id]) ?>
                         <?= $this->Html->link(__('Edit'), ['action' => 'edit', $note->id]) ?>

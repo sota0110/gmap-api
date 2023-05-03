@@ -47,7 +47,19 @@ class NotesController extends AppController
     public function add()
     {
         $note = $this->Notes->newEmptyEntity();
+
         if ($this->request->is('post')) {
+            $note = $this->Notes->patchEntity($note, $this->request->getData());
+            
+            $myKey = "AIzaSyC3neA22vhHB3NjyQGBtmz35R5N3JWUEHA";
+            $ur_name = urlencode($note->name);
+            $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $ur_name . "+CA&key=" . $myKey ;
+            $contents= file_get_contents($url);
+            $jsonData = json_decode($contents,true);
+            $lat = $jsonData["results"][0]["geometry"]["location"]["lat"];
+            $lng = $jsonData["results"][0]["geometry"]["location"]["lng"];
+            $note->address = "lat:$lat, lng:$lng";
+            
             $note = $this->Notes->patchEntity($note, $this->request->getData());
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
@@ -56,6 +68,8 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
+
+        
         $this->set(compact('note'));
     }
 
@@ -71,7 +85,19 @@ class NotesController extends AppController
         $note = $this->Notes->get($id, [
             'contain' => [],
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $note = $this->Notes->patchEntity($note, $this->request->getData());
+
+            $myKey = "AIzaSyC3neA22vhHB3NjyQGBtmz35R5N3JWUEHA";
+            $ur_name = urlencode($note->name);
+            $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $ur_name . "+CA&key=" . $myKey ;
+            $contents= file_get_contents($url);
+            $jsonData = json_decode($contents,true);
+            $lat = $jsonData["results"][0]["geometry"]["location"]["lat"];
+            $lng = $jsonData["results"][0]["geometry"]["location"]["lng"];
+            $note->address = "lat:$lat, lng:$lng";
+
             $note = $this->Notes->patchEntity($note, $this->request->getData());
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
