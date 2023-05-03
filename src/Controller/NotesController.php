@@ -51,7 +51,6 @@ class NotesController extends AppController
         if ($this->request->is('post')) {
             $note = $this->Notes->patchEntity($note, $this->request->getData());
             $this->getAddress($note);
-            $note = $this->Notes->patchEntity($note, $this->request->getData());
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
 
@@ -59,8 +58,6 @@ class NotesController extends AppController
             }
             $this->Flash->error(__('The note could not be saved. Please, try again.'));
         }
-
-        
         $this->set(compact('note'));
     }
 
@@ -80,7 +77,6 @@ class NotesController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $note = $this->Notes->patchEntity($note, $this->request->getData());
             $this->getAddress($note);
-            $note = $this->Notes->patchEntity($note, $this->request->getData());
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
 
@@ -115,20 +111,19 @@ class NotesController extends AppController
     {
         $myKey = "AIzaSyC3neA22vhHB3NjyQGBtmz35R5N3JWUEHA";
         $ur_name = urlencode($note->name);
-        $url = "https://maps.googleapis.com/maps/api/geocode/json";
-        $url_lat = $url . "?address=" . $ur_name . "+CA&key=" . $myKey ;
-        $contents= file_get_contents($url_lat);
+        $url = "https://maps.googleapis.com/maps/api/geocode/json?address=" . $ur_name . "+CA&key=" . $myKey;
+        $contents= file_get_contents($url);
         $jsonData = json_decode($contents,true);
+
+        $note->latitude = $jsonData["results"][0]["geometry"]["location"]["lat"];
+        $note->longitude = $jsonData["results"][0]["geometry"]["location"]["lng"];
+
         $addresses = $jsonData["results"][0]["address_components"];
         array_shift($addresses);
         $addresses = array_reverse($addresses);
-        dd(gettype($addresses[0]["long_name"]));
         $note->address = null;
         foreach($addresses as $address)
         {
-            // if (0 == strcmp($value, 'ccc'))    {
-            //     break;
-            // }
             $note->address = $note->address . $address["long_name"] . " ";
         }
     }

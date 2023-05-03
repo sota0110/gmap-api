@@ -24,6 +24,14 @@ class CreateNotes extends AbstractMigration
             'default' => null,
             'null' => true,
         ]);
+        $table->addColumn('latitude', 'float', [
+            'default' => null,
+            'null' => true,
+        ]);
+        $table->addColumn('longitude', 'float', [
+            'default' => null,
+            'null' => true,
+        ]);
         $table->addColumn('memo', 'text', [
             'default' => null,
             'null' => true,
